@@ -2,1126 +2,936 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>All Project</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=1280">
+<title>Task Migration v2 — Copy & Cut</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #f4f6f9;
-    --surface: #ffffff;
-    --border: #e2e6ed;
-    --border-light: #edf0f5;
-    --text-primary: #1a2035;
-    --text-secondary: #6b7a99;
-    --text-muted: #9aa3b8;
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-    --accent-light: #eff4ff;
-    --accent-border: #bfcffe;
-    --success: #059669;
-    --success-light: #ecfdf5;
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-    --shadow-md: 0 4px 16px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.05);
-    --shadow-lg: 0 20px 60px rgba(0,0,0,.14), 0 8px 24px rgba(0,0,0,.08);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text-primary);
-    font-size: 14px;
-    line-height: 1.5;
-    min-height: 100vh;
-  }
-
-  /* ── Sidebar ── */
-  .layout { display: flex; min-height: 100vh; }
-
-  .sidebar {
-    width: 220px;
-    background: var(--text-primary);
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-  }
-
-  .sidebar-logo {
-    padding: 22px 20px 18px;
-    border-bottom: 1px solid rgba(255,255,255,.08);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .logo-icon {
-    width: 32px; height: 32px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .logo-icon svg { width: 18px; height: 18px; fill: #fff; }
-
-  .logo-text {
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-    letter-spacing: -.01em;
-  }
-
-  .sidebar-nav { padding: 16px 12px; flex: 1; }
-
-  .nav-label {
-    font-size: 10px;
-    font-weight: 500;
-    color: rgba(255,255,255,.3);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    padding: 0 8px;
-    margin-bottom: 6px;
-    margin-top: 16px;
-  }
-
-  .nav-label:first-child { margin-top: 0; }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    padding: 8px 10px;
-    border-radius: var(--radius-sm);
-    color: rgba(255,255,255,.55);
-    font-size: 13px;
-    font-weight: 400;
-    cursor: pointer;
-    transition: background .15s, color .15s;
-    margin-bottom: 2px;
-    text-decoration: none;
-  }
-
-  .nav-item:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.85); }
-  .nav-item.active { background: var(--accent); color: #fff; font-weight: 500; }
-
-  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* ── Main ── */
-  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
-  .topbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 28px;
-    height: 58px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-
-  .breadcrumb span { color: var(--text-primary); font-weight: 500; }
-
-  .topbar-right { display: flex; align-items: center; gap: 12px; }
-
-  .avatar {
-    width: 32px; height: 32px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 600; color: #fff;
-  }
-
-  .content { flex: 1; padding: 28px; overflow-y: auto; }
-
-  /* ── Page header ── */
-  .page-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-
-  .page-title {
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: -.02em;
-  }
-
-  .page-subtitle {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-top: 3px;
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-md);
-    padding: 9px 18px;
-    font-size: 13px;
-    font-weight: 500;
-    font-family: inherit;
-    cursor: pointer;
-    transition: background .15s, transform .1s;
-    box-shadow: 0 2px 8px rgba(37,99,235,.25);
-  }
-
-  .btn-primary:hover { background: var(--accent-hover); }
-  .btn-primary:active { transform: scale(.98); }
-
-  .btn-primary svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* ── Stats ── */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 18px 20px;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .stat-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-bottom: 6px; }
-
-  .stat-value { font-size: 26px; font-weight: 600; color: var(--text-primary); letter-spacing: -.02em; font-family: 'DM Mono', monospace; }
-
-  .stat-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 11px;
-    padding: 2px 7px;
-    border-radius: 20px;
-    margin-top: 6px;
-    font-weight: 500;
-  }
-
-  .stat-badge.up { background: var(--success-light); color: var(--success); }
-
-  /* ── Filter bar ── */
-  .filter-bar {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 16px 20px;
-    margin-bottom: 20px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .filter-bar input, .filter-bar select {
-    height: 36px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 0 12px;
-    font-size: 13px;
-    font-family: inherit;
-    color: var(--text-primary);
-    background: var(--bg);
-    outline: none;
-    transition: border .15s, box-shadow .15s;
-  }
-
-  .filter-bar input:focus, .filter-bar select:focus {
-    border-color: var(--accent-border);
-    box-shadow: 0 0 0 3px rgba(37,99,235,.08);
-  }
-
-  .filter-bar input::placeholder { color: var(--text-muted); }
-  .filter-bar input[type="text"] { width: 130px; }
-  .filter-bar select { width: 140px; cursor: pointer; }
-  .filter-bar input[type="date"] { width: 130px; }
-
-  .filter-bar .btn-show {
-    height: 36px;
-    padding: 0 18px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-weight: 500;
-    font-family: inherit;
-    cursor: pointer;
-    transition: background .15s;
-    margin-left: auto;
-  }
-
-  .filter-bar .btn-show:hover { background: var(--accent-hover); }
-
-  .filter-select-wrap { display: flex; align-items: center; gap: 6px; }
-  .filter-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
-
-  /* ── Table card ── */
-  .table-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-  }
-
-  .table-wrap { overflow-x: auto; }
-
-  table { width: 100%; border-collapse: collapse; min-width: 950px; }
-
-  thead tr {
-    border-bottom: 1px solid var(--border);
-    background: #fafbfd;
-  }
-
-  thead th {
-    padding: 11px 14px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-align: left;
-    white-space: nowrap;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    user-select: none;
-  }
-
-  thead th .sort-icon { opacity: .4; margin-left: 4px; font-size: 10px; }
-
-  tbody tr {
-    border-bottom: 1px solid var(--border-light);
-    transition: background .1s;
-  }
-
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: #f8faff; }
-
-  td {
-    padding: 12px 14px;
-    font-size: 13px;
-    color: var(--text-primary);
-    white-space: nowrap;
-  }
-
-  td.project-name a {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 13px;
-  }
-
-  td.project-name a:hover { text-decoration: underline; }
-
-  .badge-active {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: var(--accent);
-    color: #fff;
-    border-radius: 20px;
-    padding: 4px 14px;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: .02em;
-  }
-
-  .badge-active::before {
-    content: '';
-    width: 5px; height: 5px;
-    background: rgba(255,255,255,.7);
-    border-radius: 50%;
-  }
-
-  .btn-dup {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 5px 12px;
-    font-size: 12px;
-    font-family: inherit;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all .15s;
-    font-weight: 500;
-  }
-
-  .btn-dup:hover {
-    background: var(--accent-light);
-    border-color: var(--accent-border);
-    color: var(--accent);
-  }
-
-  .btn-dup svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* ── Table footer ── */
-  .table-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 20px;
-    border-top: 1px solid var(--border-light);
-    background: #fafbfd;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .table-info { font-size: 12px; color: var(--text-muted); }
-
-  .pager { display: flex; align-items: center; gap: 4px; }
-
-  .pager button {
-    width: 30px; height: 30px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    font-size: 12px;
-    font-family: 'DM Mono', monospace;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all .15s;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .pager button:hover { border-color: var(--accent-border); color: var(--accent); }
-  .pager button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-  .export-links { display: flex; align-items: center; gap: 10px; font-size: 12px; }
-  .export-links a { color: var(--accent); text-decoration: none; font-weight: 500; transition: opacity .15s; }
-  .export-links a:hover { opacity: .7; }
-  .export-links .sep { color: var(--border); }
-
-  /* ── Modal overlay ── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15,23,42,.45);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .2s;
-  }
-
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
-
-  .modal {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    width: 520px;
-    max-width: calc(100vw - 32px);
-    max-height: calc(100vh - 80px);
-    display: flex;
-    flex-direction: column;
-    box-shadow: var(--shadow-lg);
-    transform: translateY(12px) scale(.98);
-    transition: transform .2s, opacity .2s;
-    overflow: hidden;
-  }
-
-  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
-
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 24px 16px;
-    border-bottom: 1px solid var(--border-light);
-    flex-shrink: 0;
-  }
-
-  .modal-header-left { display: flex; align-items: center; gap: 10px; }
-
-  .modal-icon {
-    width: 36px; height: 36px;
-    background: var(--accent-light);
-    border-radius: var(--radius-sm);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .modal-icon svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-
-  .modal-title { font-size: 15px; font-weight: 600; color: var(--text-primary); letter-spacing: -.01em; }
-  .modal-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
-
-  .modal-close {
-    width: 30px; height: 30px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: transparent;
-    font-size: 16px;
-    cursor: pointer;
-    color: var(--text-muted);
-    display: flex; align-items: center; justify-content: center;
-    transition: all .15s;
-    font-family: inherit;
-    line-height: 1;
-  }
-
-  .modal-close:hover { background: var(--bg); color: var(--text-primary); }
-
-  .modal-body {
-    padding: 20px 24px;
-    overflow-y: auto;
-    flex: 1;
-  }
-
-  .proj-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--accent-light);
-    border: 1px solid var(--accent-border);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
-    color: var(--accent);
-    font-weight: 500;
-    margin-bottom: 18px;
-  }
-
-  .select-all-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 14px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    margin-bottom: 12px;
-    cursor: pointer;
-  }
-
-  .select-all-bar label {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-primary);
-    cursor: pointer;
-  }
-
-  .chk-count { font-size: 11px; color: var(--text-muted); }
-
-  /* Sections */
-  .dup-section {
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    margin-bottom: 10px;
-    transition: border-color .15s;
-  }
-
-  .dup-section.checked { border-color: var(--accent-border); }
-
-  .section-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 11px 14px;
-    cursor: pointer;
-    transition: background .12s;
-  }
-
-  .section-row:hover { background: var(--bg); }
-
-  .section-row.is-parent {
-    background: #fafbfd;
-    border-bottom: 1px solid var(--border-light);
-    font-weight: 500;
-  }
-
-  .section-row.is-child {
-    padding-left: 38px;
-    border-top: 1px solid var(--border-light);
-  }
-
-  .section-row.is-child:first-of-type { border-top: none; }
-
-  .row-check {
-    width: 16px; height: 16px;
-    accent-color: var(--accent);
-    cursor: pointer;
-    flex-shrink: 0;
-    margin: 0;
-  }
-
-  .row-info { flex: 1; }
-  .row-name { font-size: 13px; color: var(--text-primary); }
-  .row-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
-
-  .row-icon {
-    width: 28px; height: 28px;
-    background: var(--accent-light);
-    border-radius: var(--radius-sm);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .row-icon svg { width: 14px; height: 14px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  .row-icon.gray { background: var(--bg); }
-  .row-icon.gray svg { stroke: var(--text-muted); }
-
-  /* Modal footer */
-  .modal-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    border-top: 1px solid var(--border-light);
-    flex-shrink: 0;
-    background: #fafbfd;
-  }
-
-  .modal-footer-info { font-size: 12px; color: var(--text-muted); }
-  .modal-footer-info strong { color: var(--accent); font-weight: 600; }
-
-  .modal-footer-btns { display: flex; gap: 8px; }
-
-  .btn-cancel {
-    height: 36px;
-    padding: 0 18px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    font-size: 13px;
-    font-family: inherit;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all .15s;
-    font-weight: 500;
-  }
-
-  .btn-cancel:hover { background: var(--bg); }
-
-  .btn-confirm {
-    height: 36px;
-    padding: 0 20px;
-    border: none;
-    border-radius: var(--radius-sm);
-    background: var(--accent);
-    color: #fff;
-    font-size: 13px;
-    font-family: inherit;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background .15s, transform .1s;
-    display: flex; align-items: center; gap: 6px;
-    box-shadow: 0 2px 8px rgba(37,99,235,.25);
-  }
-
-  .btn-confirm:hover { background: var(--accent-hover); }
-  .btn-confirm:active { transform: scale(.98); }
-  .btn-confirm svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    background: var(--text-primary);
-    color: #fff;
-    padding: 12px 18px;
-    border-radius: var(--radius-md);
-    font-size: 13px;
-    font-weight: 500;
-    box-shadow: var(--shadow-md);
-    transform: translateY(20px);
-    opacity: 0;
-    transition: all .25s;
-    z-index: 2000;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    max-width: 320px;
-  }
-
-  .toast.show { transform: translateY(0); opacity: 1; }
-
-  .toast svg { width: 16px; height: 16px; stroke: #4ade80; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-
-  input[type="checkbox"] { cursor: pointer; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F4F5F8;
+  --surface:#FFFFFF;
+  --surface2:#F8F9FC;
+  --surface3:#EEF0F6;
+  --border:#E2E5EF;
+  --border2:#D0D5E8;
+  --text:#1A1D2E;
+  --text2:#5A6180;
+  --text3:#9AA3BF;
+  --accent:#3B5BDB;
+  --accent-dim:#EEF2FF;
+  --accent-mid:rgba(59,91,219,.2);
+  --accent-text:#3B5BDB;
+  --green:#0CA678;
+  --green-dim:#E6FAF5;
+  --green-mid:rgba(12,166,120,.2);
+  --amber:#E67700;
+  --amber-dim:#FFF3CD;
+  --amber-mid:rgba(230,119,0,.2);
+  --red:#E03131;
+  --red-dim:#FFF5F5;
+  --purple:#7048E8;
+  --purple-dim:#F3F0FF;
+  --purple-mid:rgba(112,72,232,.2);
+  --cut:#C92A2A;
+  --cut-dim:#FFF5F5;
+  --cut-mid:rgba(201,42,42,.15);
+  --copy:#1971C2;
+  --copy-dim:#E7F5FF;
+  --copy-mid:rgba(25,113,194,.15);
+  --radius:10px;
+  --radius-sm:7px;
+  --radius-xs:5px;
+  --shadow:0 4px 24px rgba(26,29,46,.08);
+  --shadow-lg:0 16px 48px rgba(26,29,46,.16);
+}
+html,body{height:100%;font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;}
+/* ===== APP SHELL ===== */
+.app{display:flex;height:100vh;overflow:hidden;}
+/* ===== SIDEBAR ===== */
+.sidebar{width:220px;flex-shrink:0;background:var(--text);display:flex;flex-direction:column;}
+.sidebar-logo{padding:20px 18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.07);}
+.logo-mark{width:30px;height:30px;background:var(--accent);border-radius:8px;display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.logo-text{font-size:13px;font-weight:600;color:#fff;letter-spacing:-.01em;}
+.logo-sub{font-size:9px;color:rgba(255,255,255,.35);font-family:'JetBrains Mono',monospace;margin-top:1px;}
+.sidebar-section{padding:16px 18px 5px;font-size:9px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;margin:1px 8px;border-radius:var(--radius-xs);color:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;font-size:12px;}
+.nav-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);}
+.nav-item.active{background:var(--accent);color:#fff;font-weight:500;}
+.nav-badge{margin-left:auto;background:rgba(255,255,255,.12);color:rgba(255,255,255,.6);font-size:9px;padding:1px 6px;border-radius:20px;font-family:'JetBrains Mono',monospace;}
+.nav-item.active .nav-badge{background:rgba(255,255,255,.2);color:#fff;}
+.proj-item{display:flex;align-items:center;gap:9px;padding:7px 10px;margin:1px 8px;border-radius:var(--radius-xs);cursor:pointer;color:rgba(255,255,255,.4);transition:all .15s;font-size:12px;}
+.proj-item:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.75);}
+.proj-item.active{color:rgba(255,255,255,.9);}
+.proj-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sidebar-footer{margin-top:auto;padding:12px 8px;border-top:1px solid rgba(255,255,255,.07);}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-xs);cursor:pointer;}
+.user-row:hover{background:rgba(255,255,255,.05);}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:grid;place-items:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-name{font-size:12px;font-weight:500;color:rgba(255,255,255,.8);}
+.user-role{font-size:10px;color:rgba(255,255,255,.3);}
+/* ===== MAIN ===== */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+/* TOPBAR */
+.topbar{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;flex-shrink:0;box-shadow:var(--shadow);}
+.topbar-title{font-size:15px;font-weight:600;color:var(--text);}
+.topbar-sep{width:1px;height:16px;background:var(--border2);}
+.topbar-sub{font-size:12px;color:var(--text3);}
+.spacer{flex:1;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius-xs);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid transparent;font-family:'Sora',sans-serif;white-space:nowrap;}
+.btn-ghost{background:transparent;color:var(--text2);border-color:var(--border2);}
+.btn-ghost:hover{background:var(--surface2);color:var(--text);}
+.btn-accent{background:var(--accent);color:#fff;}
+.btn-accent:hover{background:#3451c7;}
+.btn-sm{padding:5px 11px;font-size:11.5px;}
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:24px;}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);}
+.stat-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
+.stat-value{font-size:24px;font-weight:700;color:var(--text);font-family:'JetBrains Mono',monospace;line-height:1;}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:5px;display:flex;align-items:center;gap:5px;}
+.stat-pip{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+/* TABLE CARD */
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.table-toolbar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.toolbar-title{font-size:13px;font-weight:600;}
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:6px 12px;width:210px;}
+.search-wrap input{background:transparent;border:none;outline:none;font-size:12px;color:var(--text);width:100%;font-family:'Sora',sans-serif;}
+.search-wrap input::placeholder{color:var(--text3);}
+.filter-chip{display:inline-flex;align-items:center;font-size:11.5px;padding:5px 12px;border-radius:20px;background:var(--surface2);border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .15s;}
+.filter-chip.on{background:var(--accent-dim);border-color:var(--accent-mid);color:var(--accent-text);font-weight:500;}
+.filter-chip:hover:not(.on){border-color:var(--border2);}
+/* BULK BAR */
+.bulk-bar{display:none;align-items:center;gap:12px;padding:10px 18px;background:var(--accent-dim);border-bottom:1px solid var(--accent-mid);}
+.bulk-bar.show{display:flex;animation:slideDown .18s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+/* TABLE */
+.t-head{display:grid;grid-template-columns:40px 1fr 110px 100px 90px 80px 110px;align-items:center;padding:9px 18px;background:var(--surface2);border-bottom:1px solid var(--border);}
+.th{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;}
+.t-row{display:grid;grid-template-columns:40px 1fr 110px 100px 90px 80px 110px;align-items:center;padding:11px 18px;border-bottom:1px solid var(--border);transition:background .12s;cursor:pointer;}
+.t-row:last-child{border-bottom:none;}
+.t-row:hover{background:var(--surface2);}
+.t-row.sel{background:var(--accent-dim);}
+.cell-name{font-size:12.5px;font-weight:500;}
+.cell-sub{font-size:10.5px;color:var(--text3);margin-top:2px;}
+.mono{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text2);}
+.badge{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:.02em;}
+.b-open{background:var(--accent-dim);color:var(--accent-text);}
+.b-review{background:var(--amber-dim);color:var(--amber);}
+.b-done{background:var(--green-dim);color:var(--green);}
+.mini-av{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;}
+.assignee-row{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);}
+.ts-pip{width:5px;height:5px;border-radius:50%;background:var(--amber);}
+input[type=checkbox]{width:14px;height:14px;accent-color:var(--accent);cursor:pointer;}
+
+/* ===== OVERLAY ===== */
+.overlay{position:fixed;inset:0;background:rgba(26,29,46,.55);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding:32px 24px;z-index:100;overflow-y:auto;}
+.overlay.open{display:flex;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ===== MODAL ===== */
+.mig-modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;width:100%;max-width:1020px;box-shadow:var(--shadow-lg);animation:modalUp .22s ease;overflow:hidden;display:flex;flex-direction:column;max-height:calc(100vh - 64px);}
+@keyframes modalUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.m-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;}
+.m-title{font-size:16px;font-weight:700;color:var(--text);}
+.m-sub{font-size:11.5px;color:var(--text3);margin-top:3px;font-family:'JetBrains Mono',monospace;}
+.close-btn{width:28px;height:28px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);color:var(--text3);cursor:pointer;display:grid;place-items:center;font-size:14px;transition:all .15s;flex-shrink:0;}
+.close-btn:hover{background:var(--surface3);color:var(--text);}
+
+/* STEP INDICATOR */
+.step-bar{display:flex;align-items:center;padding:12px 24px;border-bottom:1px solid var(--border);background:var(--surface2);gap:0;flex-shrink:0;}
+.step{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text3);font-weight:500;}
+.step.done{color:var(--green);}
+.step.active{color:var(--accent);font-weight:600;}
+.step-num{width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.step.done .step-num{background:var(--green);border-color:var(--green);color:#fff;}
+.step.active .step-num{background:var(--accent);border-color:var(--accent);color:#fff;}
+.step-line{flex:1;height:1px;background:var(--border);margin:0 10px;}
+.step-line.done{background:var(--green);}
+
+/* MODAL BODY */
+.m-body{display:grid;grid-template-columns:1fr 340px;flex:1;min-height:0;overflow:hidden;}
+.m-left{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.m-right{display:flex;flex-direction:column;overflow-y:auto;background:var(--surface);}
+.m-right::-webkit-scrollbar{width:3px;}
+.m-right::-webkit-scrollbar-thumb{background:var(--border2);}
+
+/* LEFT */
+.left-filter{padding:13px 18px;border-bottom:1px solid var(--border);background:var(--surface2);flex-shrink:0;}
+.f-label{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:7px;}
+.date-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.date-in{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-xs);padding:6px 10px;font-size:11.5px;color:var(--text);font-family:'JetBrains Mono',monospace;outline:none;transition:border .15s;width:138px;}
+.date-in:focus{border-color:var(--accent);}
+.date-sep{font-size:11px;color:var(--text3);}
+.f-info{font-size:10.5px;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+.m-bulk{display:none;align-items:center;gap:10px;padding:8px 18px;background:var(--accent-dim);border-bottom:1px solid var(--accent-mid);flex-shrink:0;}
+.m-bulk.show{display:flex;}
+.m-t-head{display:grid;grid-template-columns:30px 1fr 72px 50px 64px;padding:7px 18px;background:var(--surface2);border-bottom:1px solid var(--border);flex-shrink:0;}
+.m-task-list{overflow-y:auto;flex:1;}
+.m-task-list::-webkit-scrollbar{width:3px;}
+.m-task-list::-webkit-scrollbar-thumb{background:var(--border2);}
+.m-row{display:grid;grid-template-columns:30px 1fr 72px 50px 64px;align-items:center;padding:10px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+.m-row:last-child{border-bottom:none;}
+.m-row:hover{background:var(--surface2);}
+.m-row.msel{background:var(--accent-dim);}
+.m-row.mhide{display:none;}
+.m-name{font-size:12.5px;font-weight:500;color:var(--text);}
+.m-sub{font-size:10px;color:var(--text3);margin-top:2px;font-family:'JetBrains Mono',monospace;}
+.empty-state{padding:28px;text-align:center;color:var(--text3);font-size:12px;}
+
+/* RIGHT sections */
+.r-sec{padding:16px 18px;border-bottom:1px solid var(--border);}
+.r-sec:last-child{border-bottom:none;}
+.r-label{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:10px;}
+
+/* PROJECT SELECT */
+.proj-sel{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-xs);padding:8px 12px;font-size:12.5px;color:var(--text);font-family:'Sora',sans-serif;outline:none;cursor:pointer;transition:border .15s;}
+.proj-sel:focus{border-color:var(--accent);}
+
+/* CONCEPT TOGGLE — big toggle between CUT and COPY */
+.concept-toggle{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border2);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:0;}
+.concept-btn{padding:12px 10px;text-align:center;cursor:pointer;transition:all .2s;border:none;font-family:'Sora',sans-serif;}
+.concept-btn .c-icon{font-size:18px;display:block;margin-bottom:4px;}
+.concept-btn .c-name{font-size:12.5px;font-weight:700;display:block;}
+.concept-btn .c-desc{font-size:10px;color:var(--text3);display:block;margin-top:2px;line-height:1.4;}
+.concept-btn.cut-active{background:var(--cut-dim);border-right:1px solid var(--cut-mid);}
+.concept-btn.cut-active .c-name{color:var(--cut);}
+.concept-btn.cut-active .c-desc{color:rgba(201,42,42,.6);}
+.concept-btn.copy-active{background:var(--copy-dim);}
+.concept-btn.copy-active .c-name{color:var(--copy);}
+.concept-btn.copy-active .c-desc{color:rgba(25,113,194,.6);}
+.concept-btn:not(.cut-active):not(.copy-active){background:var(--surface2);}
+.concept-btn:not(.cut-active):not(.copy-active) .c-name{color:var(--text2);}
+.concept-note{font-size:10.5px;margin-top:8px;padding:8px 10px;border-radius:var(--radius-xs);line-height:1.5;}
+.cut-note{background:var(--cut-dim);color:var(--cut);border:1px solid var(--cut-mid);}
+.copy-note{background:var(--copy-dim);color:var(--copy);border:1px solid var(--copy-mid);}
+
+/* MODE CARDS */
+.mode-stack{display:flex;flex-direction:column;gap:6px;}
+.mode-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;cursor:pointer;transition:all .15s;display:flex;align-items:flex-start;gap:10px;}
+.mode-card:hover:not(.m-cut-a):not(.m-cut-b1):not(.m-cut-b2):not(.m-copy-a):not(.m-copy-b){border-color:var(--border2);background:var(--surface2);}
+/* CUT modes */
+.mode-card.m-cut-a{border-color:var(--cut);background:var(--cut-dim);}
+.mode-card.m-cut-b1{border-color:var(--green);background:var(--green-dim);}
+.mode-card.m-cut-b2{border-color:var(--purple);background:var(--purple-dim);}
+/* COPY modes */
+.mode-card.m-copy-a{border-color:var(--copy);background:var(--copy-dim);}
+.mode-card.m-copy-b{border-color:var(--purple);background:var(--purple-dim);}
+.m-radio{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;margin-top:2px;transition:all .15s;display:grid;place-items:center;}
+.mode-card.m-cut-a .m-radio{border-color:var(--cut);background:var(--cut);}
+.mode-card.m-cut-b1 .m-radio{border-color:var(--green);background:var(--green);}
+.mode-card.m-cut-b2 .m-radio{border-color:var(--purple);background:var(--purple);}
+.mode-card.m-copy-a .m-radio{border-color:var(--copy);background:var(--copy);}
+.mode-card.m-copy-b .m-radio{border-color:var(--purple);background:var(--purple);}
+.m-radio::after{content:'';width:4px;height:4px;border-radius:50%;background:#fff;display:none;}
+.mode-card.m-cut-a .m-radio::after,.mode-card.m-cut-b1 .m-radio::after,.mode-card.m-cut-b2 .m-radio::after,
+.mode-card.m-copy-a .m-radio::after,.mode-card.m-copy-b .m-radio::after{display:block;}
+.mode-name{font-size:12px;font-weight:700;color:var(--text);}
+.mode-desc{font-size:10.5px;color:var(--text2);margin-top:2px;line-height:1.4;}
+.mode-tag{display:inline-block;font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:5px;letter-spacing:.02em;}
+.tag-cut{background:var(--cut-dim);color:var(--cut);}
+.tag-copy{background:var(--copy-dim);color:var(--copy);}
+.tag-green{background:var(--green-dim);color:var(--green);}
+.tag-purple{background:var(--purple-dim);color:var(--purple);}
+.hidden-mode{display:none;}
+
+/* TS FILTER BOX */
+.ts-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:10px 12px;margin-top:8px;display:none;}
+.ts-box.show{display:block;}
+
+/* PREVIEW */
+.prev-list{display:flex;flex-direction:column;gap:5px;}
+.prev-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:10px 12px;}
+.prev-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px;}
+.chip-row{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:4px;}
+.chip{font-size:10px;padding:2px 8px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-weight:500;}
+.chip-go{background:var(--green-dim);color:var(--green);}
+.chip-stay{background:var(--surface3);color:var(--text3);text-decoration:line-through;}
+.chip-copy{background:var(--copy-dim);color:var(--copy);}
+.chip-none{background:var(--surface3);color:var(--text3);}
+.prev-note{font-size:10.5px;display:flex;align-items:center;gap:5px;margin-top:3px;}
+.note-warn{color:var(--amber);}
+.note-ok{color:var(--green);}
+.note-info{color:var(--copy);}
+.prev-empty{font-size:12px;color:var(--text3);text-align:center;padding:20px 0;}
+
+/* SUMMARY */
+.sum-grid{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+.sum-cell{padding:10px 14px;border-right:1px solid var(--border);}
+.sum-cell:last-child{border-right:none;}
+.sum-val{font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text);}
+.sum-lbl{font-size:9.5px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.06em;}
+
+/* MODAL FOOTER */
+.m-footer{padding:13px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;background:var(--surface2);}
+.m-hint{font-size:11px;color:var(--text3);}
+.btn-execute-cut{background:var(--cut);color:#fff;border-color:var(--cut);}
+.btn-execute-cut:hover{background:#b02222;}
+.btn-execute-copy{background:var(--copy);color:#fff;border-color:var(--copy);}
+.btn-execute-copy:hover{background:#145da8;}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);border-radius:10px;padding:12px 20px;font-size:12.5px;color:#fff;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);opacity:0;transition:all .3s;z-index:300;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
 </style>
 </head>
 <body>
+<div class="app">
 
-<div class="layout">
-
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-icon">
-        <svg viewBox="0 0 24 24"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>
-      </div>
-      <span class="logo-text">ProjectMS</span>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">J</div>
+    <div><div class="logo-text">Joget Internal</div><div class="logo-sub">PROTOTYPE v2.0</div></div>
+  </div>
+  <div class="sidebar-section">Navigasi</div>
+  <div class="nav-item"><span style="font-size:14px;">⊞</span> Dashboard</div>
+  <div class="nav-item active"><span style="font-size:14px;">✦</span> Semua Task <span class="nav-badge">47</span></div>
+  <div class="nav-item"><span style="font-size:14px;">◷</span> Timesheet</div>
+  <div class="nav-item"><span style="font-size:14px;">◈</span> Laporan</div>
+  <div class="nav-item"><span style="font-size:14px;">⚙</span> Pengaturan</div>
+  <div class="sidebar-section" style="margin-top:8px;">Projects</div>
+  <div class="proj-item active"><div class="proj-dot" style="background:#3B5BDB;"></div> Project Alpha</div>
+  <div class="proj-item"><div class="proj-dot" style="background:#0CA678;"></div> Project Beta</div>
+  <div class="proj-item"><div class="proj-dot" style="background:#E67700;"></div> Project Gamma</div>
+  <div class="proj-item"><div class="proj-dot" style="background:#7048E8;"></div> Backlog Umum</div>
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="avatar">PM</div>
+      <div><div class="user-name">Pak Budi</div><div class="user-role">Project Manager</div></div>
     </div>
-    <nav class="sidebar-nav">
-      <div class="nav-label">Main</div>
-      <a class="nav-item" href="#">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Dashboard
-      </a>
-      <a class="nav-item active" href="#">
-        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-        All Project
-      </a>
-      <a class="nav-item" href="#">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Members
-      </a>
-      <a class="nav-item" href="#">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        Reports
-      </a>
-      <div class="nav-label">Settings</div>
-      <a class="nav-item" href="#">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-        Configuration
-      </a>
-      <a class="nav-item" href="#">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg>
-        Profile
-      </a>
-    </nav>
-  </aside>
+  </div>
+</aside>
 
-  <!-- Main content -->
-  <div class="main">
-    <div class="topbar">
-      <div class="breadcrumb">
-        <span style="color:var(--text-muted)">Home</span>
-        <span style="color:var(--text-muted)">›</span>
-        <span>All Project</span>
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title">Project Alpha — Task List</div>
+    <div class="topbar-sep"></div>
+    <div class="topbar-sub">12 task aktif</div>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost btn-sm">⊕ Task baru</button>
+    <button class="btn btn-ghost btn-sm">⇣ Export</button>
+    <button class="btn btn-accent" onclick="openModal()">⇄ Migrasi task ke project lain</button>
+  </div>
+
+  <div class="content">
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total Task</div>
+        <div class="stat-value">12</div>
+        <div class="stat-sub"><div class="stat-pip" style="background:var(--accent);"></div>Project Alpha</div>
       </div>
-      <div class="topbar-right">
-        <div style="font-size:12px;color:var(--text-muted)">Rabu, 6 Mei 2026</div>
-        <div class="avatar">AD</div>
+      <div class="stat-card">
+        <div class="stat-label">Open</div>
+        <div class="stat-value" style="color:var(--accent);">8</div>
+        <div class="stat-sub"><div class="stat-pip" style="background:var(--accent);"></div>sedang berjalan</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Timesheet</div>
+        <div class="stat-value" style="color:var(--amber);">34</div>
+        <div class="stat-sub"><div class="stat-pip" style="background:var(--amber);"></div>entry dari semua task</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Jam Tercatat</div>
+        <div class="stat-value" style="color:var(--green);">278</div>
+        <div class="stat-sub"><div class="stat-pip" style="background:var(--green);"></div>jam kerja bulan ini</div>
       </div>
     </div>
 
-    <div class="content">
-
-      <!-- Page header -->
-      <div class="page-header">
-        <div>
-          <div class="page-title">All Project</div>
-          <div class="page-subtitle">Kelola dan pantau seluruh proyek yang sedang berjalan</div>
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="toolbar-title">Semua Task</div>
+        <div class="search-wrap"><span style="color:var(--text3);">⌕</span><input type="text" placeholder="Cari task..."></div>
+        <div class="filter-chip on">Semua</div>
+        <div class="filter-chip">Open</div>
+        <div class="filter-chip">Review</div>
+        <div class="filter-chip">Done</div>
+        <div class="spacer"></div>
+        <button class="btn btn-ghost btn-sm">⊟ Filter</button>
+        <button class="btn btn-ghost btn-sm">⇅ Urutkan</button>
+      </div>
+      <div id="main-bulk" class="bulk-bar">
+        <span style="font-size:12px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;" id="main-cnt">0</span>
+        <span style="font-size:12px;color:var(--accent);">task dipilih</span>
+        <div class="spacer"></div>
+        <button class="btn btn-ghost btn-sm">Ubah status</button>
+        <button class="btn btn-accent btn-sm" onclick="openModal()">⇄ Migrasi ke project lain</button>
+      </div>
+      <div class="t-head">
+        <div class="th"><input type="checkbox" id="main-all" onchange="mainAll(this.checked)"></div>
+        <div class="th">Nama Task</div>
+        <div class="th">Dibuat</div>
+        <div class="th">Assignee</div>
+        <div class="th">Due Date</div>
+        <div class="th">Timesheet</div>
+        <div class="th">Status</div>
+      </div>
+      <div id="main-list">
+        <div class="t-row" onclick="mainToggle(this)">
+          <div><input type="checkbox" class="main-chk" onclick="event.stopPropagation();mainChk(this)"></div>
+          <div><div class="cell-name">Setup CI/CD pipeline</div><div class="cell-sub">Infrastruktur</div></div>
+          <div class="mono">03/04/26</div>
+          <div><div class="assignee-row"><div class="mini-av" style="background:#3B5BDB;">DK</div>Dani K.</div></div>
+          <div class="mono">03/05/26</div>
+          <div style="font-size:12px;display:flex;align-items:center;gap:5px;"><div class="ts-pip"></div>4 entry</div>
+          <div><span class="badge b-open">Open</span></div>
         </div>
-        <button class="btn-primary">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Create New Project
-        </button>
+        <div class="t-row" onclick="mainToggle(this)">
+          <div><input type="checkbox" class="main-chk" onclick="event.stopPropagation();mainChk(this)"></div>
+          <div><div class="cell-name">Desain halaman login</div><div class="cell-sub">UI/UX</div></div>
+          <div class="mono">05/04/26</div>
+          <div><div class="assignee-row"><div class="mini-av" style="background:#7048E8;">RA</div>Reza A.</div></div>
+          <div class="mono">25/04/26</div>
+          <div style="font-size:12px;display:flex;align-items:center;gap:5px;"><div class="ts-pip"></div>2 entry</div>
+          <div><span class="badge b-review">Review</span></div>
+        </div>
+        <div class="t-row" onclick="mainToggle(this)">
+          <div><input type="checkbox" class="main-chk" onclick="event.stopPropagation();mainChk(this)"></div>
+          <div><div class="cell-name">Integrasi API pembayaran</div><div class="cell-sub">Backend</div></div>
+          <div class="mono">10/04/26</div>
+          <div><div class="assignee-row"><div class="mini-av" style="background:#0CA678;">SD</div>Sinta D.</div></div>
+          <div class="mono">28/04/26</div>
+          <div style="font-size:12px;display:flex;align-items:center;gap:5px;"><div class="ts-pip"></div>3 entry</div>
+          <div><span class="badge b-open">Open</span></div>
+        </div>
+        <div class="t-row" onclick="mainToggle(this)">
+          <div><input type="checkbox" class="main-chk" onclick="event.stopPropagation();mainChk(this)"></div>
+          <div><div class="cell-name">Review keamanan autentikasi</div><div class="cell-sub">Security</div></div>
+          <div class="mono">12/04/26</div>
+          <div><div class="assignee-row"><div class="mini-av" style="background:#E67700;">DK</div>Dani K.</div></div>
+          <div class="mono">10/05/26</div>
+          <div style="font-size:12px;display:flex;align-items:center;gap:5px;"><div class="ts-pip"></div>2 entry</div>
+          <div><span class="badge b-review">Review</span></div>
+        </div>
+        <div class="t-row" onclick="mainToggle(this)">
+          <div><input type="checkbox" class="main-chk" onclick="event.stopPropagation();mainChk(this)"></div>
+          <div><div class="cell-name">Optimasi query database</div><div class="cell-sub">Database</div></div>
+          <div class="mono">15/04/26</div>
+          <div><div class="assignee-row"><div class="mini-av" style="background:#3B5BDB;">RA</div>Reza A.</div></div>
+          <div class="mono">15/05/26</div>
+          <div style="font-size:12px;display:flex;align-items:center;gap:5px;"><div class="ts-pip"></div>3 entry</div>
+          <div><span class="badge b-open">Open</span></div>
+        </div>
+        <div class="t-row" onclick="mainToggle(this)">
+          <div><input type="checkbox" class="main-chk" onclick="event.stopPropagation();mainChk(this)"></div>
+          <div><div class="cell-name">Dokumentasi API endpoint</div><div class="cell-sub">Docs</div></div>
+          <div class="mono">18/04/26</div>
+          <div><div class="assignee-row"><div class="mini-av" style="background:#7048E8;">SD</div>Sinta D.</div></div>
+          <div class="mono">05/05/26</div>
+          <div style="font-size:12px;display:flex;align-items:center;gap:5px;"><div class="ts-pip"></div>2 entry</div>
+          <div><span class="badge b-open">Open</span></div>
+        </div>
+        <div class="t-row" onclick="mainToggle(this)">
+          <div><input type="checkbox" class="main-chk" onclick="event.stopPropagation();mainChk(this)"></div>
+          <div><div class="cell-name">Testing modul laporan</div><div class="cell-sub">QA</div></div>
+          <div class="mono">22/04/26</div>
+          <div><div class="assignee-row"><div class="mini-av" style="background:#0CA678;">RA</div>Reza A.</div></div>
+          <div class="mono">20/05/26</div>
+          <div style="font-size:12px;color:var(--text3);">—</div>
+          <div><span class="badge b-open">Open</span></div>
+        </div>
+        <div class="t-row" onclick="mainToggle(this)">
+          <div><input type="checkbox" class="main-chk" onclick="event.stopPropagation();mainChk(this)"></div>
+          <div><div class="cell-name">Setup monitoring server</div><div class="cell-sub">DevOps</div></div>
+          <div class="mono">25/04/26</div>
+          <div><div class="assignee-row"><div class="mini-av" style="background:#E67700;">DK</div>Dani K.</div></div>
+          <div class="mono">25/05/26</div>
+          <div style="font-size:12px;display:flex;align-items:center;gap:5px;"><div class="ts-pip"></div>1 entry</div>
+          <div><span class="badge b-done">Done</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<!-- ===== MIGRATION MODAL ===== -->
+<div class="overlay" id="overlay" onclick="handleOvClick(event)">
+<div class="mig-modal">
+
+  <div class="m-header">
+    <div>
+      <div class="m-title">Migrasi Task ke Project Lain</div>
+      <div class="m-sub">Project Alpha · pilih konsep, task, dan konfigurasi timesheet</div>
+    </div>
+    <button class="close-btn" onclick="closeModal()">✕</button>
+  </div>
+
+  <!-- STEP BAR -->
+  <div class="step-bar">
+    <div class="step active" id="st1"><div class="step-num">1</div> Pilih Task</div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step" id="st2"><div class="step-num">2</div> Konsep & Mode</div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step" id="st3"><div class="step-num">3</div> Konfigurasi Timesheet</div>
+    <div class="step-line" id="sl3"></div>
+    <div class="step" id="st4"><div class="step-num">4</div> Preview & Konfirmasi</div>
+  </div>
+
+  <div class="m-body">
+    <!-- LEFT: task list -->
+    <div class="m-left">
+      <div class="left-filter">
+        <div class="f-label">① Filter task berdasarkan tanggal dibuat</div>
+        <div class="date-row">
+          <input type="date" class="date-in" id="tf-from" onchange="applyTF()">
+          <span class="date-sep">—</span>
+          <input type="date" class="date-in" id="tf-to" onchange="applyTF()">
+          <button class="btn btn-ghost btn-sm" onclick="clearTF()">Reset</button>
+          <span class="f-info" id="tf-info"></span>
+        </div>
+      </div>
+      <div class="m-bulk" id="m-bulk">
+        <span style="font-size:12px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;" id="m-cnt">0</span>
+        <span style="font-size:12px;color:var(--accent);">task dipilih</span>
+        <div class="spacer"></div>
+        <button class="btn btn-ghost btn-sm" style="font-size:11px;" onclick="mClear()">Batal pilih</button>
+      </div>
+      <div class="m-t-head">
+        <div class="th"><input type="checkbox" id="m-all" onchange="mAll(this.checked)"></div>
+        <div class="th">Nama Task</div>
+        <div class="th">Dibuat</div>
+        <div class="th">TS</div>
+        <div class="th">Status</div>
+      </div>
+      <div class="m-task-list" id="m-list">
+        <div class="m-row" onclick="mToggle(this)" data-created="2026-04-03" data-ts='[{"l":"7 Apr","d":"2026-04-07","j":3},{"l":"20 Apr","d":"2026-04-20","j":5},{"l":"28 Apr","d":"2026-04-28","j":4},{"l":"2 Mei","d":"2026-05-02","j":2}]'>
+          <div><input type="checkbox" class="m-chk" onclick="event.stopPropagation();mChk(this)"></div>
+          <div><div class="m-name">Setup CI/CD pipeline</div><div class="m-sub">03/04/2026</div></div>
+          <div class="mono" style="font-size:11px;">03/04</div>
+          <div style="font-size:11px;display:flex;align-items:center;gap:4px;"><div class="ts-pip"></div>4</div>
+          <div><span class="badge b-open" style="font-size:9.5px;">Open</span></div>
+        </div>
+        <div class="m-row" onclick="mToggle(this)" data-created="2026-04-05" data-ts='[{"l":"8 Apr","d":"2026-04-08","j":2},{"l":"15 Apr","d":"2026-04-15","j":6}]'>
+          <div><input type="checkbox" class="m-chk" onclick="event.stopPropagation();mChk(this)"></div>
+          <div><div class="m-name">Desain halaman login</div><div class="m-sub">05/04/2026</div></div>
+          <div class="mono" style="font-size:11px;">05/04</div>
+          <div style="font-size:11px;display:flex;align-items:center;gap:4px;"><div class="ts-pip"></div>2</div>
+          <div><span class="badge b-review" style="font-size:9.5px;">Review</span></div>
+        </div>
+        <div class="m-row" onclick="mToggle(this)" data-created="2026-04-10" data-ts='[{"l":"12 Apr","d":"2026-04-12","j":4},{"l":"22 Apr","d":"2026-04-22","j":3},{"l":"30 Apr","d":"2026-04-30","j":5}]'>
+          <div><input type="checkbox" class="m-chk" onclick="event.stopPropagation();mChk(this)"></div>
+          <div><div class="m-name">Integrasi API pembayaran</div><div class="m-sub">10/04/2026</div></div>
+          <div class="mono" style="font-size:11px;">10/04</div>
+          <div style="font-size:11px;display:flex;align-items:center;gap:4px;"><div class="ts-pip"></div>3</div>
+          <div><span class="badge b-open" style="font-size:9.5px;">Open</span></div>
+        </div>
+        <div class="m-row" onclick="mToggle(this)" data-created="2026-04-12" data-ts='[{"l":"14 Apr","d":"2026-04-14","j":2},{"l":"25 Apr","d":"2026-04-25","j":3}]'>
+          <div><input type="checkbox" class="m-chk" onclick="event.stopPropagation();mChk(this)"></div>
+          <div><div class="m-name">Review keamanan autentikasi</div><div class="m-sub">12/04/2026</div></div>
+          <div class="mono" style="font-size:11px;">12/04</div>
+          <div style="font-size:11px;display:flex;align-items:center;gap:4px;"><div class="ts-pip"></div>2</div>
+          <div><span class="badge b-review" style="font-size:9.5px;">Review</span></div>
+        </div>
+        <div class="m-row" onclick="mToggle(this)" data-created="2026-04-15" data-ts='[{"l":"17 Apr","d":"2026-04-17","j":3},{"l":"24 Apr","d":"2026-04-24","j":4},{"l":"1 Mei","d":"2026-05-01","j":2}]'>
+          <div><input type="checkbox" class="m-chk" onclick="event.stopPropagation();mChk(this)"></div>
+          <div><div class="m-name">Optimasi query database</div><div class="m-sub">15/04/2026</div></div>
+          <div class="mono" style="font-size:11px;">15/04</div>
+          <div style="font-size:11px;display:flex;align-items:center;gap:4px;"><div class="ts-pip"></div>3</div>
+          <div><span class="badge b-open" style="font-size:9.5px;">Open</span></div>
+        </div>
+        <div class="m-row" onclick="mToggle(this)" data-created="2026-04-18" data-ts='[{"l":"20 Apr","d":"2026-04-20","j":2},{"l":"27 Apr","d":"2026-04-27","j":3}]'>
+          <div><input type="checkbox" class="m-chk" onclick="event.stopPropagation();mChk(this)"></div>
+          <div><div class="m-name">Dokumentasi API endpoint</div><div class="m-sub">18/04/2026</div></div>
+          <div class="mono" style="font-size:11px;">18/04</div>
+          <div style="font-size:11px;display:flex;align-items:center;gap:4px;"><div class="ts-pip"></div>2</div>
+          <div><span class="badge b-open" style="font-size:9.5px;">Open</span></div>
+        </div>
+        <div class="m-row" onclick="mToggle(this)" data-created="2026-04-22" data-ts='[]'>
+          <div><input type="checkbox" class="m-chk" onclick="event.stopPropagation();mChk(this)"></div>
+          <div><div class="m-name">Testing modul laporan</div><div class="m-sub">22/04/2026</div></div>
+          <div class="mono" style="font-size:11px;">22/04</div>
+          <div style="font-size:11px;color:var(--text3);">—</div>
+          <div><span class="badge b-open" style="font-size:9.5px;">Open</span></div>
+        </div>
+        <div class="m-row" onclick="mToggle(this)" data-created="2026-04-25" data-ts='[{"l":"26 Apr","d":"2026-04-26","j":4}]'>
+          <div><input type="checkbox" class="m-chk" onclick="event.stopPropagation();mChk(this)"></div>
+          <div><div class="m-name">Setup monitoring server</div><div class="m-sub">25/04/2026</div></div>
+          <div class="mono" style="font-size:11px;">25/04</div>
+          <div style="font-size:11px;display:flex;align-items:center;gap:4px;"><div class="ts-pip"></div>1</div>
+          <div><span class="badge b-done" style="font-size:9.5px;">Done</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="m-right">
+
+      <!-- Project tujuan -->
+      <div class="r-sec">
+        <div class="r-label">② Project tujuan</div>
+        <select class="proj-sel" id="m-proj">
+          <option value="">— Pilih project tujuan —</option>
+          <option>Project Beta</option>
+          <option>Project Gamma</option>
+          <option>Backlog Umum</option>
+        </select>
       </div>
 
-      <!-- Stats -->
-      <div class="stats">
-        <div class="stat-card">
-          <div class="stat-label">Total Project</div>
-          <div class="stat-value">19</div>
-          <div class="stat-badge up">↑ 3 bulan ini</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Active</div>
-          <div class="stat-value">19</div>
-          <div class="stat-badge up">↑ 100%</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">App Development</div>
-          <div class="stat-value">18</div>
-          <div class="stat-badge up">↑ tipe terbanyak</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">PIC Aktif</div>
-          <div class="stat-value">9</div>
-          <div class="stat-badge up">↑ 2 baru</div>
-        </div>
-      </div>
-
-      <!-- Filter bar -->
-      <div class="filter-bar">
-        <div class="filter-select-wrap">
-          <span class="filter-label">Show</span>
-          <select style="width:70px"><option>10</option><option>25</option><option>50</option></select>
-        </div>
-        <input type="text" placeholder="Project Name">
-        <input type="text" placeholder="Client Name">
-        <select><option value="">Project Type</option><option>Application Development</option><option>Workshop / Training</option></select>
-        <select><option value="">Project Status</option><option>Active</option><option>Inactive</option></select>
-        <select><option value="">Project Stage</option><option>Kick Off</option><option>New Project</option><option>Internal Test</option><option>Go Live</option></select>
-        <input type="text" placeholder="PIC Name">
-        <input type="date">
-        <span style="color:var(--text-muted);font-size:12px">—</span>
-        <input type="date">
-        <button class="btn-show">Show</button>
-      </div>
-
-      <!-- Table -->
-      <div class="table-card">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Project Name <span class="sort-icon">⇅</span></th>
-                <th>Client Name <span class="sort-icon">⇅</span></th>
-                <th>Project Type <span class="sort-icon">⇅</span></th>
-                <th>Project Status <span class="sort-icon">⇅</span></th>
-                <th>Project Stage <span class="sort-icon">⇅</span></th>
-                <th>PIC Name <span class="sort-icon">⇅</span></th>
-                <th>Start Date <span class="sort-icon">⇅</span></th>
-                <th>End Date <span class="sort-icon">↓</span></th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-body"></tbody>
-          </table>
-        </div>
-        <div class="table-footer">
-          <span class="table-info">19 items found, displaying 1 to 10.</span>
-          <div class="pager">
-            <button>«</button>
-            <button>‹</button>
-            <button class="active">1</button>
-            <button>2</button>
-            <button>›</button>
-            <button>»</button>
+      <!-- KONSEP TOGGLE -->
+      <div class="r-sec">
+        <div class="r-label">③ Konsep migrasi</div>
+        <div class="concept-toggle">
+          <div class="concept-btn cut-active" id="cb-cut" onclick="setConcept('cut')">
+            <span class="c-icon">✂️</span>
+            <span class="c-name">CUT</span>
+            <span class="c-desc">Task dipindah dari project asal. Data asli tidak lagi ada di Alpha.</span>
           </div>
-          <div class="export-links">
-            <a href="#">CSV</a><span class="sep">|</span>
-            <a href="#">Excel</a><span class="sep">|</span>
-            <a href="#">XML</a><span class="sep">|</span>
-            <a href="#">PDF</a>
+          <div class="concept-btn" id="cb-copy" onclick="setConcept('copy')">
+            <span class="c-icon">📋</span>
+            <span class="c-name">COPY</span>
+            <span class="c-desc">Task diduplikasi. Data asli tetap utuh di Alpha.</span>
           </div>
+        </div>
+        <div class="concept-note cut-note" id="concept-note">
+          ✂ CUT: Task asli akan <strong>dihapus dari Project Alpha</strong> setelah dipindahkan. Timesheet yang tertinggal ditampung di ghost task otomatis.
+        </div>
+      </div>
+
+      <!-- MODE -->
+      <div class="r-sec">
+        <div class="r-label">④ Mode timesheet</div>
+        <div class="mode-stack" id="mode-stack">
+          <!-- CUT modes (default visible) -->
+          <div class="mode-card m-cut-a" id="mc-cut-a" onclick="setMode('cut-a')">
+            <div class="m-radio"></div>
+            <div>
+              <div class="mode-name">Task saja</div>
+              <div class="mode-desc">Task pindah, semua TS ditinggal. Ghost task otomatis dibuat di Alpha sebagai penampung.</div>
+              <span class="mode-tag tag-cut">Ghost task dibuat</span>
+            </div>
+          </div>
+          <div class="mode-card" id="mc-cut-b1" onclick="setMode('cut-b1')">
+            <div class="m-radio"></div>
+            <div>
+              <div class="mode-name">Task + semua TS</div>
+              <div class="mode-desc">Task dan seluruh timesheet dipindah. Tidak ada yang tertinggal, tidak perlu ghost task.</div>
+              <span class="mode-tag tag-green">Tidak ada ghost task</span>
+            </div>
+          </div>
+          <div class="mode-card" id="mc-cut-b2" onclick="setMode('cut-b2')">
+            <div class="m-radio"></div>
+            <div>
+              <div class="mode-name">Task + TS sesuai filter tanggal</div>
+              <div class="mode-desc">Hanya TS dalam rentang tanggal yang ikut. Sisanya di ghost task Alpha.</div>
+              <span class="mode-tag tag-purple">Ghost task jika ada sisa TS</span>
+              <div class="ts-box" id="ts-box-cut" onclick="event.stopPropagation()">
+                <div class="f-label" style="margin-bottom:6px;">Rentang TS yang ikut pindah</div>
+                <div class="date-row">
+                  <input type="date" class="date-in" id="ts-cut-from" onchange="updatePreview()" style="width:124px;">
+                  <span class="date-sep">—</span>
+                  <input type="date" class="date-in" id="ts-cut-to" onchange="updatePreview()" style="width:124px;">
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="clearTsCut()" style="margin-top:6px;font-size:10.5px;">Reset filter TS</button>
+              </div>
+            </div>
+          </div>
+          <!-- COPY modes (hidden by default) -->
+          <div class="mode-card hidden-mode" id="mc-copy-a" onclick="setMode('copy-a')">
+            <div class="m-radio"></div>
+            <div>
+              <div class="mode-name">Task saja</div>
+              <div class="mode-desc">Task diduplikasi tanpa membawa TS. Task baru di project tujuan mulai dengan histori kosong.</div>
+              <span class="mode-tag tag-copy">Task asli tetap di Alpha</span>
+            </div>
+          </div>
+          <div class="mode-card hidden-mode" id="mc-copy-b" onclick="setMode('copy-b')">
+            <div class="m-radio"></div>
+            <div>
+              <div class="mode-name">Task + TS sesuai filter tanggal</div>
+              <div class="mode-desc">Task di-copy ke project tujuan. TS yang masuk filter <strong>dipindah (CUT)</strong> ke task baru — bukan diduplikasi. TS di luar filter tetap di task asli di Alpha.</div>
+              <span class="mode-tag tag-copy">Task asli tetap · TS filter dipindah</span>
+              <div class="ts-box" id="ts-box-copy" onclick="event.stopPropagation()">
+                <div class="f-label" style="margin-bottom:6px;">Rentang TS yang ikut disalin</div>
+                <div class="date-row">
+                  <input type="date" class="date-in" id="ts-copy-from" onchange="updatePreview()" style="width:124px;">
+                  <span class="date-sep">—</span>
+                  <input type="date" class="date-in" id="ts-copy-to" onchange="updatePreview()" style="width:124px;">
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="clearTsCopy()" style="margin-top:6px;font-size:10.5px;">Reset filter TS</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="r-sec">
+        <div class="r-label">⑤ Preview hasil migrasi</div>
+        <div id="prev-list" class="prev-list">
+          <div class="prev-empty">Pilih task di kiri untuk melihat preview</div>
+        </div>
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="r-sec" id="sum-wrap" style="display:none;">
+        <div class="r-label">Ringkasan</div>
+        <div class="sum-grid">
+          <div class="sum-cell"><div class="sum-val" id="s-task">—</div><div class="sum-lbl">Task migrasi</div></div>
+          <div class="sum-cell"><div class="sum-val" id="s-ts">—</div><div class="sum-lbl">TS ikut</div></div>
+          <div class="sum-cell"><div class="sum-val" id="s-ghost">—</div><div class="sum-lbl">Ghost task</div></div>
         </div>
       </div>
 
     </div>
   </div>
-</div>
 
-<!-- Modal -->
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-header-left">
-        <div class="modal-icon">
-          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        </div>
-        <div>
-          <div class="modal-title">Duplicate Project</div>
-          <div class="modal-subtitle">Pilih data yang akan di-duplikasi</div>
-        </div>
-      </div>
-      <button class="modal-close" id="modal-close-btn">×</button>
-    </div>
-
-    <div class="modal-body">
-      <div class="proj-tag">
-        <svg style="width:12px;height:12px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-        <span id="modal-proj-name">—</span>
-      </div>
-
-      <!-- Select all -->
-      <div class="select-all-bar">
-        <label for="chk-all">
-          <input type="checkbox" id="chk-all" class="row-check">
-          Pilih semua data
-        </label>
-        <span class="chk-count" id="chk-count">0 / 9 dipilih</span>
-      </div>
-
-      <!-- 1. Project Info -->
-      <div class="dup-section" id="sec-info">
-        <label class="section-row is-parent">
-          <input type="checkbox" class="row-check chk-parent" data-group="info" checked>
-          <div class="row-icon">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          </div>
-          <div class="row-info">
-            <div class="row-name">Project Info</div>
-            <div class="row-desc">Informasi utama proyek</div>
-          </div>
-        </label>
-        <label class="section-row is-child">
-          <input type="checkbox" class="row-check chk-child" data-group="info" checked>
-          <div class="row-icon gray">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          </div>
-          <div class="row-info">
-            <div class="row-name">Project Details</div>
-            <div class="row-desc">Nama, deskripsi, tipe, dan status proyek</div>
-          </div>
-        </label>
-        <label class="section-row is-child">
-          <input type="checkbox" class="row-check chk-child" data-group="info" checked>
-          <div class="row-icon gray">
-            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          </div>
-          <div class="row-info">
-            <div class="row-name">Calculation Mandays</div>
-            <div class="row-desc">Estimasi hari kerja dan resource planning</div>
-          </div>
-        </label>
-      </div>
-
-      <!-- 2. Member -->
-      <div class="dup-section">
-        <label class="section-row is-parent">
-          <input type="checkbox" class="row-check chk-standalone" id="chk-member">
-          <div class="row-icon">
-            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <div class="row-info">
-            <div class="row-name">Member</div>
-            <div class="row-desc">Daftar anggota tim yang terlibat dalam proyek</div>
-          </div>
-        </label>
-      </div>
-
-      <!-- 3. Phase -->
-      <div class="dup-section">
-        <label class="section-row is-parent">
-          <input type="checkbox" class="row-check chk-standalone" id="chk-phase" checked>
-          <div class="row-icon">
-            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </div>
-          <div class="row-info">
-            <div class="row-name">Phase</div>
-            <div class="row-desc">Tahapan-tahapan dalam proyek</div>
-          </div>
-        </label>
-      </div>
-
-      <!-- 4. Notes -->
-      <div class="dup-section">
-        <label class="section-row is-parent">
-          <input type="checkbox" class="row-check chk-standalone" id="chk-notes">
-          <div class="row-icon">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-          </div>
-          <div class="row-info">
-            <div class="row-name">Notes</div>
-            <div class="row-desc">Catatan tambahan terkait proyek</div>
-          </div>
-        </label>
-      </div>
-
-      <!-- 5. Configuration -->
-      <div class="dup-section" id="sec-config">
-        <label class="section-row is-parent">
-          <input type="checkbox" class="row-check chk-parent" data-group="config" checked>
-          <div class="row-icon">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M21 12h-2M5 12H3M12 3V1M12 23v-2"/></svg>
-          </div>
-          <div class="row-info">
-            <div class="row-name">Configuration</div>
-            <div class="row-desc">Pengaturan dan konfigurasi proyek</div>
-          </div>
-        </label>
-        <label class="section-row is-child">
-          <input type="checkbox" class="row-check chk-child" data-group="config" checked>
-          <div class="row-icon gray">
-            <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          </div>
-          <div class="row-info">
-            <div class="row-name">Manage To Do List</div>
-            <div class="row-desc">Template tugas dan checklist proyek</div>
-          </div>
-        </label>
-        <label class="section-row is-child">
-          <input type="checkbox" class="row-check chk-child" data-group="config" checked>
-          <div class="row-icon gray">
-            <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-          </div>
-          <div class="row-info">
-            <div class="row-name">Manage Tag</div>
-            <div class="row-desc">Label dan kategori tag proyek</div>
-          </div>
-        </label>
-        <label class="section-row is-child">
-          <input type="checkbox" class="row-check chk-child" data-group="config">
-          <div class="row-icon gray">
-            <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-          </div>
-          <div class="row-info">
-            <div class="row-name">Manage Iteration</div>
-            <div class="row-desc">Sprint atau iterasi pengembangan</div>
-          </div>
-        </label>
-        <label class="section-row is-child">
-          <input type="checkbox" class="row-check chk-child" data-group="config" checked>
-          <div class="row-icon gray">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div class="row-info">
-            <div class="row-name">Manage Status</div>
-            <div class="row-desc">Konfigurasi status alur kerja</div>
-          </div>
-        </label>
-      </div>
-    </div>
-
-    <div class="modal-footer">
-      <div class="modal-footer-info"><strong id="footer-count">7</strong> dari 9 item dipilih</div>
-      <div class="modal-footer-btns">
-        <button class="btn-cancel" id="modal-cancel-btn">Batal</button>
-        <button class="btn-confirm" id="modal-confirm-btn">
-          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Duplicate
-        </button>
-      </div>
-    </div>
+  <!-- MODAL FOOTER -->
+  <div class="m-footer">
+    <div class="m-hint" id="m-hint">Pilih task dan konfigurasi migrasi</div>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" onclick="closeModal()">Batal</button>
+    <button class="btn btn-execute-cut" id="exec-btn" onclick="doExecute()">Pindahkan task</button>
   </div>
+
+</div>
 </div>
 
-<!-- Toast -->
-<div class="toast" id="toast">
-  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-  <span id="toast-msg">Project berhasil di-duplicate!</span>
-</div>
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toast-msg">Berhasil</span></div>
 
 <script>
-const ROWS = [
-  ["Oasys PM","Mensa Group","Application Development","Active","Kick Off","Mr Firman Wibowo","02/01/2025","01/08/2025"],
-  ["Matrial","AEON Credit Service Indonesia","Application Development","Active","Kick Off","Mr Yanuar Andriyanto","25/02/2025","28/02/2025"],
-  ["Coedotz Testing","Asahimas Chemical","Application Development","Active","Internal Test","Mr Faraha Pambayun","01/03/2026","31/03/2026"],
-  ["first project","Dr Jonny","Application Development","Active","Kick Off","Mr Dr. Jonny","15/04/2026","30/04/2026"],
-  ["cek tanggal 2","PELNI","Application Development","Active","New Project","Mr Akhmad Fauzi","21/04/2026","23/04/2026"],
-  ["cek tanggal 3","PELNI","Application Development","Active","Go Live","Mr Akhmad Fauzi","21/04/2026","24/04/2026"],
-  ["0910250001e","Pintar Inovasi Mandiri","Application Development","Active","New Project","Mr Supriadi Acep","01/10/2025","26/11/2025"],
-  ["time","Komatsu Indonesia","Application Development","Active","New Project","Mr Muhamad Jalaludin K","08/04/2026","11/04/2026"],
-  ["third project","Dr Jonny","Application Development","Active","New Project","Mr Dr. Jonny","30/04/2026","30/04/2027"],
-  ["KPI Report","Bank Mega Syariah","Workshop / Training","Active","Go Live","Mr Hidayat Djovi M. Putra","05/12/2025","12/12/2025"],
-];
-
-const tbody = document.getElementById('tbl-body');
-ROWS.forEach(r => {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td class="project-name"><a href="#">${r[0]}</a></td>
-    <td>${r[1]}</td>
-    <td>${r[2]}</td>
-    <td><span class="badge-active">${r[3]}</span></td>
-    <td>${r[4]}</td>
-    <td>${r[5]}</td>
-    <td style="font-family:'DM Mono',monospace;font-size:12px">${r[6]}</td>
-    <td style="font-family:'DM Mono',monospace;font-size:12px">${r[7]}</td>
-    <td>
-      <button class="btn-dup" data-name="${r[0]}">
-        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Duplicate
-      </button>
-    </td>`;
-  tbody.appendChild(tr);
-});
-
-// Modal logic
-const overlay = document.getElementById('modal-overlay');
-const projNameEl = document.getElementById('modal-proj-name');
-const chkAll = document.getElementById('chk-all');
-const chkCountEl = document.getElementById('chk-count');
-const footerCountEl = document.getElementById('footer-count');
-
-function leafChecks() { return [...document.querySelectorAll('.chk-child, .chk-standalone')]; }
-function allGroups() { return [...new Set([...document.querySelectorAll('.chk-child')].map(c => c.dataset.group))]; }
-
-function updateCounts() {
-  const leaves = leafChecks();
-  const checked = leaves.filter(c => c.checked).length;
-  const total = leaves.length;
-  chkCountEl.textContent = `${checked} / ${total} dipilih`;
-  footerCountEl.textContent = checked;
-  chkAll.checked = checked === total;
-  chkAll.indeterminate = checked > 0 && checked < total;
+// ========== MAIN TABLE ==========
+function mainToggle(r){const c=r.querySelector('.main-chk');c.checked=!c.checked;r.classList.toggle('sel',c.checked);mainUpdate();}
+function mainChk(c){c.closest('.t-row').classList.toggle('sel',c.checked);mainUpdate();}
+function mainAll(v){document.querySelectorAll('.main-chk').forEach(c=>{c.checked=v;c.closest('.t-row').classList.toggle('sel',v);});mainUpdate();}
+function mainUpdate(){
+  const n=document.querySelectorAll('.main-chk:checked').length;
+  const bar=document.getElementById('main-bulk');
+  bar.classList.toggle('show',n>0);
+  document.getElementById('main-cnt').textContent=n;
+  const tot=document.querySelectorAll('.main-chk').length;
+  const a=document.getElementById('main-all');
+  a.checked=n===tot&&tot>0;a.indeterminate=n>0&&n<tot;
 }
 
-function syncParent(group) {
-  const kids = [...document.querySelectorAll(`.chk-child[data-group="${group}"]`)];
-  const par = document.querySelector(`.chk-parent[data-group="${group}"]`);
-  par.checked = kids.every(k => k.checked);
-  par.indeterminate = !par.checked && kids.some(k => k.checked);
-}
+// ========== MODAL ==========
+function openModal(){document.getElementById('overlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('overlay').classList.remove('open');document.body.style.overflow='';}
+function handleOvClick(e){if(e.target===document.getElementById('overlay'))closeModal();}
 
-function openModal(name) {
-  projNameEl.textContent = name;
-  overlay.classList.add('open');
-  updateCounts();
-}
-
-function closeModal() { overlay.classList.remove('open'); }
-
-document.querySelectorAll('.btn-dup').forEach(b => b.addEventListener('click', () => openModal(b.dataset.name)));
-document.getElementById('modal-close-btn').addEventListener('click', closeModal);
-document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
-overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-
-chkAll.addEventListener('change', () => {
-  const v = chkAll.checked;
-  [...document.querySelectorAll('.chk-child, .chk-standalone, .chk-parent')].forEach(c => { c.checked = v; c.indeterminate = false; });
-  updateCounts();
-});
-
-document.querySelectorAll('.chk-child').forEach(c => {
-  c.addEventListener('change', () => { syncParent(c.dataset.group); updateCounts(); });
-});
-
-document.querySelectorAll('.chk-parent').forEach(p => {
-  p.addEventListener('change', () => {
-    const g = p.dataset.group;
-    [...document.querySelectorAll(`.chk-child[data-group="${g}"]`)].forEach(c => c.checked = p.checked);
-    p.indeterminate = false;
-    updateCounts();
+// TASK FILTER
+function applyTF(){
+  const f=document.getElementById('tf-from').value,t=document.getElementById('tf-to').value;
+  let n=0;
+  document.querySelectorAll('.m-row').forEach(r=>{
+    const c=r.dataset.created,hide=(f&&c<f)||(t&&c>t);
+    r.classList.toggle('mhide',hide);
+    if(hide){r.querySelector('.m-chk').checked=false;r.classList.remove('msel');}
+    else n++;
   });
-});
-
-document.querySelectorAll('.chk-standalone').forEach(c => c.addEventListener('change', updateCounts));
-
-// Toast
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toast-msg').textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3200);
+  document.getElementById('tf-info').textContent=(f||t)?'· '+n+' task':'';
+  mUpdate();updatePreview();
+}
+function clearTF(){
+  document.getElementById('tf-from').value='';document.getElementById('tf-to').value='';
+  document.getElementById('tf-info').textContent='';
+  document.querySelectorAll('.m-row').forEach(r=>r.classList.remove('mhide'));
+  mUpdate();updatePreview();
 }
 
-document.getElementById('modal-confirm-btn').addEventListener('click', () => {
-  const name = projNameEl.textContent;
-  const count = leafChecks().filter(c => c.checked).length;
-  closeModal();
-  showToast(`"${name}" berhasil di-duplicate! (${count} item)`);
-});
+// MODAL ROW SELECT
+function mToggle(r){if(r.classList.contains('mhide'))return;const c=r.querySelector('.m-chk');c.checked=!c.checked;r.classList.toggle('msel',c.checked);mUpdate();updatePreview();}
+function mChk(c){c.closest('.m-row').classList.toggle('msel',c.checked);mUpdate();updatePreview();}
+function mAll(v){document.querySelectorAll('.m-row:not(.mhide) .m-chk').forEach(c=>{c.checked=v;c.closest('.m-row').classList.toggle('msel',v);});mUpdate();updatePreview();}
+function mClear(){document.querySelectorAll('.m-chk').forEach(c=>{c.checked=false;c.closest('.m-row').classList.remove('msel');});document.getElementById('m-all').checked=false;mUpdate();updatePreview();}
+function mUpdate(){
+  const n=document.querySelectorAll('.m-chk:checked').length;
+  document.getElementById('m-bulk').classList.toggle('show',n>0);
+  document.getElementById('m-cnt').textContent=n;
+  const vis=document.querySelectorAll('.m-row:not(.mhide)').length;
+  const vChk=document.querySelectorAll('.m-row:not(.mhide) .m-chk:checked').length;
+  const a=document.getElementById('m-all');
+  a.checked=vis>0&&vChk===vis;a.indeterminate=vChk>0&&vChk<vis;
+  const btn=document.getElementById('exec-btn');
+  btn.textContent=n>0?(concept==='cut'?'Pindahkan ':'Salin ')+n+' task':(concept==='cut'?'Pindahkan task':'Salin task');
+  document.getElementById('m-hint').textContent=n>0?n+' task siap di-'+(concept==='cut'?'pindahkan (CUT)':'salin (COPY)'):'Pilih task dan konfigurasi migrasi';
+  // step indicators
+  updateSteps(n>0);
+}
 
-updateCounts();
+// CONCEPT
+let concept='cut', mode='cut-a';
+function setConcept(c){
+  concept=c;
+  document.getElementById('cb-cut').className='concept-btn'+(c==='cut'?' cut-active':'');
+  document.getElementById('cb-copy').className='concept-btn'+(c==='copy'?' copy-active':'');
+  // note
+  const note=document.getElementById('concept-note');
+  if(c==='cut'){
+    note.className='concept-note cut-note';
+    note.innerHTML='✂ CUT: Task asli akan <strong>dihapus dari Project Alpha</strong> setelah dipindahkan. Timesheet yang tertinggal ditampung di ghost task otomatis.';
+  } else {
+    note.className='concept-note copy-note';
+    note.innerHTML='📋 COPY: Task asli <strong>tetap ada di Project Alpha</strong>. Task baru dibuat di project tujuan. Jika mode TS dipilih, TS yang masuk filter akan <strong>dipindah (CUT)</strong> ke task baru — bukan diduplikasi. TS di luar filter tetap di task asli.';
+  }
+  // show/hide mode cards
+  ['cut-a','cut-b1','cut-b2'].forEach(m=>{
+    document.getElementById('mc-'+m).classList.toggle('hidden-mode',c!=='cut');
+  });
+  ['copy-a','copy-b'].forEach(m=>{
+    document.getElementById('mc-'+m).classList.toggle('hidden-mode',c!=='copy');
+  });
+  // default mode
+  mode=c==='cut'?'cut-a':'copy-a';
+  refreshModeCards();
+  // exec btn color
+  const btn=document.getElementById('exec-btn');
+  btn.className='btn btn-execute-'+(c==='cut'?'cut':'copy');
+  mUpdate();
+  updatePreview();
+}
+
+function setMode(m){
+  mode=m;
+  refreshModeCards();
+  // show/hide ts filter boxes
+  document.getElementById('ts-box-cut').classList.toggle('show',m==='cut-b2');
+  document.getElementById('ts-box-copy').classList.toggle('show',m==='copy-b');
+  updatePreview();
+}
+function refreshModeCards(){
+  const all=['cut-a','cut-b1','cut-b2','copy-a','copy-b'];
+  all.forEach(k=>{
+    const el=document.getElementById('mc-'+k);
+    if(!el)return;
+    // remove all active classes
+    el.classList.remove('m-cut-a','m-cut-b1','m-cut-b2','m-copy-a','m-copy-b');
+    if(k===mode) el.classList.add('m-'+k);
+  });
+}
+
+function clearTsCut(){document.getElementById('ts-cut-from').value='';document.getElementById('ts-cut-to').value='';updatePreview();}
+function clearTsCopy(){document.getElementById('ts-copy-from').value='';document.getElementById('ts-copy-to').value='';updatePreview();}
+
+// PREVIEW
+function updatePreview(){
+  const sel=Array.from(document.querySelectorAll('.m-row.msel'));
+  const plist=document.getElementById('prev-list');
+  const sumWrap=document.getElementById('sum-wrap');
+  if(sel.length===0){plist.innerHTML='<div class="prev-empty">Pilih task di kiri untuk melihat preview</div>';sumWrap.style.display='none';return;}
+
+  const tsFrom=document.getElementById(concept==='cut'?'ts-cut-from':'ts-copy-from').value;
+  const tsTo=document.getElementById(concept==='cut'?'ts-cut-to':'ts-copy-to').value;
+
+  let html='',totalTs=0,ghostCnt=0;
+
+  sel.forEach(row=>{
+    const name=row.querySelector('.m-name').textContent;
+    const ts=JSON.parse(row.dataset.ts||'[]');
+    html+=`<div class="prev-card"><div class="prev-name">${name}</div>`;
+
+    if(ts.length===0){
+      html+=`<div class="chip-row"><span class="chip chip-none">Tidak ada timesheet</span></div>`;
+      html+=`<div class="prev-note note-ok">✓ Task migrasi bersih</div>`;
+    } else if(concept==='cut'){
+      if(mode==='cut-a'){
+        // task pindah, semua TS ghost
+        html+=`<div class="chip-row">`;
+        ts.forEach(t=>{html+=`<span class="chip chip-stay">${t.l}</span>`;});
+        html+=`</div><div class="prev-note note-warn">⚠ Semua TS → Ghost task di Alpha</div>`;
+        ghostCnt++;
+      } else if(mode==='cut-b1'){
+        // semua TS ikut
+        html+=`<div class="chip-row">`;
+        ts.forEach(t=>{html+=`<span class="chip chip-go">✓ ${t.l} · ${t.j}j</span>`;totalTs++;});
+        html+=`</div><div class="prev-note note-ok">✓ Semua TS ikut pindah — tidak perlu ghost task</div>`;
+      } else {
+        // cut-b2 filter
+        let hasStay=false;
+        html+=`<div class="chip-row">`;
+        ts.forEach(t=>{
+          const ok=(!tsFrom||t.d>=tsFrom)&&(!tsTo||t.d<=tsTo);
+          if(ok){html+=`<span class="chip chip-go">✓ ${t.l} · ${t.j}j</span>`;totalTs++;}
+          else{html+=`<span class="chip chip-stay">${t.l}</span>`;hasStay=true;}
+        });
+        html+=`</div>`;
+        if(hasStay){html+=`<div class="prev-note note-warn">⚠ TS dicoret → Ghost task di Alpha</div>`;ghostCnt++;}
+        else{html+=`<div class="prev-note note-ok">✓ Semua TS dalam filter — tidak perlu ghost task</div>`;}
+      }
+    } else {
+      // COPY concept
+      if(mode==='copy-a'){
+        html+=`<div class="chip-row">`;
+        ts.forEach(t=>{html+=`<span class="chip chip-stay">${t.l}</span>`;});
+        html+=`</div><div class="prev-note note-info">📋 Semua TS tetap di task asli Alpha — task baru di project tujuan mulai histori kosong</div>`;
+      } else {
+        // copy-b: task COPY, TS yang masuk filter CUT (dipindah), TS di luar filter tetap
+        let hasMoved=false, hasStay=false;
+        html+=`<div class="chip-row">`;
+        ts.forEach(t=>{
+          const ok=(!tsFrom||t.d>=tsFrom)&&(!tsTo||t.d<=tsTo);
+          if(ok){html+=`<span class="chip chip-go">✂→ ${t.l} · ${t.j}j</span>`;totalTs++;hasMoved=true;}
+          else{html+=`<span class="chip chip-stay">${t.l}</span>`;hasStay=true;}
+        });
+        html+=`</div>`;
+        if(hasMoved&&hasStay){
+          html+=`<div class="prev-note note-ok">✂ TS hijau <strong>dipindah</strong> ke task baru di project tujuan</div>`;
+          html+=`<div class="prev-note note-info" style="margin-top:3px;">📋 TS dicoret tetap di task asli Alpha</div>`;
+        } else if(hasMoved&&!hasStay){
+          html+=`<div class="prev-note note-ok">✂ Semua TS dipindah ke task baru — task asli di Alpha tidak punya TS lagi</div>`;
+        } else {
+          html+=`<div class="prev-note note-info">📋 Tidak ada TS dalam filter — semua TS tetap di task asli Alpha</div>`;
+        }
+      }
+    }
+    html+=`</div>`;
+  });
+
+  plist.innerHTML=html;
+
+  // summary
+  document.getElementById('s-task').textContent=sel.length;
+  const tsLabel=concept==='cut'?(mode==='cut-a'?'0':totalTs):(mode==='copy-a'?'0':totalTs);
+  document.getElementById('s-ts').textContent=tsLabel;
+  document.getElementById('s-ghost').textContent=concept==='cut'?(ghostCnt>0?ghostCnt:'-'):'Tidak ada';
+  sumWrap.style.display='block';
+  updateSteps(true);
+}
+
+function updateSteps(hasTask){
+  const hasConcept=true;
+  document.getElementById('st1').className='step '+(hasTask?'done':'active');
+  document.getElementById('st2').className='step '+(hasTask?'done':'');
+  document.getElementById('st3').className='step '+(hasTask?'active':'');
+  document.getElementById('st4').className='step';
+  document.getElementById('sl1').className='step-line '+(hasTask?'done':'');
+  document.getElementById('sl2').className='step-line';
+  document.getElementById('sl3').className='step-line';
+}
+
+function doExecute(){
+  const n=document.querySelectorAll('.m-chk:checked').length;
+  const proj=document.getElementById('m-proj').value;
+  if(!proj){showToast('⚠ Pilih project tujuan terlebih dahulu');return;}
+  if(n===0){showToast('⚠ Pilih minimal 1 task');return;}
+  const mLabel={
+    'cut-a':'CUT — task saja (ghost task dibuat)',
+    'cut-b1':'CUT — task + semua TS',
+    'cut-b2':'CUT — task + TS filter tanggal',
+    'copy-a':'COPY — task saja',
+    'copy-b':'COPY — task + TS filter tanggal'
+  }[mode];
+  closeModal();
+  showToast(`✓ ${n} task berhasil di-${concept==='cut'?'pindahkan':'salin'} ke ${proj} · ${mLabel}`);
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
 </script>
 </body>
 </html>
